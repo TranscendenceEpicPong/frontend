@@ -1,15 +1,6 @@
-import {html} from "./utils.js";
-
-function menu() {
-    return html`
-        <h1>Main</h1>
-        <div id="content">
-        <a href="/">Home</a>
-        <a href="/test">Test</a>
-        <a href="/profile">Profile</a>
-        <a href="/erreur">erreur</a>
-    `
-}
+import NavLink from "./components/NavLink.js";
+import MainMenu from './components/MainMenu.js'
+import {loadPage} from "./router.js";
 
 function component() {
     const element = document.createElement('div');
@@ -20,12 +11,35 @@ function component() {
     return element;
 }
 
+
+class NavLinkComponent extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        const link = this.attributes.href.value;
+        const template = NavLink(this.attributes.href.value, this.textContent);
+        const templateContent = template.content;
+
+        const shadowRoot = this.attachShadow({ mode: "open" });
+        const child = templateContent.cloneNode(true);
+        shadowRoot.appendChild(child);
+        shadowRoot.firstElementChild.onclick = e => {
+            console.log("click")
+            e.preventDefault();
+            loadPage(link);
+        };
+    }
+}
+customElements.define('nav-link', NavLinkComponent)
+
 customElements.define(
     'main-menu',
     class extends HTMLElement {
         constructor() {
             super();
-            let template = menu();
+            let template = MainMenu();
             let templateContent = template.content;
 
             const shadowRoot = this.attachShadow({ mode: "open" });
@@ -38,33 +52,34 @@ customElements.define(
 document.body.append(component());
 
 
-const router = document.querySelector('#router');
-// const routerjs = document.querySelector('#router-js');
-
-async function loadPage(link) {
-    if (link.length === 1) {
-        link = '/home';
-    }
-    console.log(link)
-    // routerjs.setAttribute('src', `${link}.js`);
-    history.pushState({}, {}, link);
-    // link = '/home';
-    let page_module = await import(`./pages/404.js`);
-    try {
-        page_module = await import(`./pages${link}.js`);
-    } catch (e)
-    {
-        console.error(e)
-    }
-    const { default: page } = page_module;
-    console.log(page())
-    router.append(page().content.cloneNode(true))
-}
+// const router = document.querySelector('#router');
+// // const routerjs = document.querySelector('#router-js');
+//
+// async function loadPage(link) {
+//     if (link.length === 1) {
+//         link = '/home';
+//     }
+//     console.log(link)
+//     // routerjs.setAttribute('src', `${link}.js`);
+//     history.pushState({}, {}, link);
+//     // link = '/home';
+//     let page_module = await import(`./pages/404.js`);
+//     try {
+//         page_module = await import(`./pages${link}.js`);
+//     } catch (e)
+//     {
+//         console.error(e)
+//     }
+//     const { default: page } = page_module;
+//     console.log(page())
+//     router.append(page().content.cloneNode(true))
+// }
 
 const links = document.querySelectorAll('a');
 links.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
+        console.log("click");
         const href = link.getAttribute('href');
         loadPage(href);
     })
