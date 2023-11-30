@@ -1,3 +1,38 @@
+function html(strings, ...values) {
+    const template = document.createElement("template");
+    let content = "";
+    strings.forEach((s, i) => {
+        content += s;
+        if (values[i]) content += values[i];
+        console.log(i, s, values[i])
+    });
+    content = content.trim();
+    if (!content) return null;
+    console.log(content);
+    template.innerHTML = content;
+    console.log(template);
+    const result = template.content.children;
+    console.log(result);
+
+    // Then return either an HTMLElement or HTMLCollection,
+    // based on whether the input HTML had one or more roots.
+    if (result.length === 1) return result[0]
+    return result;
+}
+
+function menu() {
+    return html`
+        <h1>Main</h1>
+        <div id="content">
+        <a href="/">Home</a>
+        <a href="/test">Test</a>
+        <a href="/profile">Profile</a>
+        <a href="/erreur">erreur</a>
+        <p id="test"></p>
+        <div id="router"></div>
+    `
+}
+
 function component() {
     const element = document.createElement('div');
 
@@ -7,7 +42,8 @@ function component() {
     return element;
 }
 
-document.body.appendChild(component());
+document.body.append(...menu());
+document.body.append(component());
 
 // document.querySelector('#test').innerText = `${Math.random()}`
 //
