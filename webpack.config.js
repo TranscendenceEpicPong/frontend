@@ -5,14 +5,22 @@ module.exports = {
     mode: 'development',
     entry: './src/index.js',
     devtool: 'inline-source-map',
+    devServer: {
+        static: './dist',
+        historyApiFallback: true,
+    },
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Transcendence Epic Pong',
         }),
     ],
     output: {
-        filename: 'main.js',
+        filename: '[name].bundle.js',
         path: path.resolve(__dirname, 'dist'),
         clean: true,
+        publicPath: "/",
+    },
+    optimization: {
+        runtimeChunk: 'single',
     },
 };
