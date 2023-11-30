@@ -14,12 +14,10 @@ export function html(strings, ...values) {
     strings.forEach((s, i) => {
         content += s;
         if (values[i]) content += sanitize_html(values[i]);
-        console.log(i, s, values[i])
     });
     content = content.trim();
     if (!content) return null;
-    console.log(content);
-    template.innerHTML = content;
 
+    template.innerHTML = content;
     return template;
 }

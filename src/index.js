@@ -39,27 +39,26 @@ document.body.append(component());
 
 
 const router = document.querySelector('#router');
-const routerjs = document.querySelector('#router-js');
+// const routerjs = document.querySelector('#router-js');
 
-function loadPage(link) {
+async function loadPage(link) {
     if (link.length === 1) {
         link = '/home';
     }
     console.log(link)
-    routerjs.setAttribute('src', `${link}.js`);
+    // routerjs.setAttribute('src', `${link}.js`);
     history.pushState({}, {}, link);
-    import(`.${link}.js`)
-        .then(response => {
-            console.log(response)
-            router.innerHTML = response.page()
-        })
-        .catch(error => {
-            console.log(error)
-            if (link === '/404')
-                alert('Une erreur est survenue');
-            else
-                loadPage('/404');
-        })
+    // link = '/home';
+    let page_module = await import(`./pages/404.js`);
+    try {
+        page_module = await import(`./pages${link}.js`);
+    } catch (e)
+    {
+        console.error(e)
+    }
+    const { default: page } = page_module;
+    console.log(page())
+    router.append(page().content.cloneNode(true))
 }
 
 const links = document.querySelectorAll('a');
