@@ -10,14 +10,17 @@ function html(strings, ...values) {
     if (!content) return null;
     console.log(content);
     template.innerHTML = content;
-    console.log(template);
-    const result = template.content.children;
-    console.log(result);
 
-    // Then return either an HTMLElement or HTMLCollection,
-    // based on whether the input HTML had one or more roots.
-    if (result.length === 1) return result[0]
-    return result;
+    return template;
+    //
+    // console.log(template);
+    // const result = template.content.children;
+    // console.log(result);
+    //
+    // // Then return either an HTMLElement or HTMLCollection,
+    // // based on whether the input HTML had one or more roots.
+    // if (result.length === 1) return result[0]
+    // return result;
 }
 
 function menu() {
@@ -28,8 +31,6 @@ function menu() {
         <a href="/test">Test</a>
         <a href="/profile">Profile</a>
         <a href="/erreur">erreur</a>
-        <p id="test"></p>
-        <div id="router"></div>
     `
 }
 
@@ -42,7 +43,21 @@ function component() {
     return element;
 }
 
-document.body.append(...menu());
+customElements.define(
+    'main-menu',
+    class extends HTMLElement {
+        constructor() {
+            super();
+            let template = menu();
+            let templateContent = template.content;
+
+            const shadowRoot = this.attachShadow({ mode: "open" });
+            shadowRoot.appendChild(templateContent.cloneNode(true));
+        }
+    }
+)
+
+// document.body.append(...menu());
 document.body.append(component());
 
 
@@ -50,19 +65,23 @@ const router = document.querySelector('#router');
 const routerjs = document.querySelector('#router-js');
 
 function loadPage(link) {
-    if (link.length === 1)
-        link = 'home';
+    if (link.length === 1) {
+        link = '/home';
+    }
+    console.log(link)
     routerjs.setAttribute('src', `${link}.js`);
     history.pushState({}, {}, link);
-    import(`./${link}.js`)
+    import(`.${link}.js`)
         .then(response => {
+            console.log(response)
             router.innerHTML = response.page()
         })
         .catch(error => {
-            if (link === '404')
+            console.log(error)
+            if (link === '/404')
                 alert('Une erreur est survenue');
             else
-                loadPage('404');
+                loadPage('/404');
         })
 }
 
