@@ -12,6 +12,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Transcendence Epic Pong',
+            template: "index.html",
         }),
     ],
     output: {
