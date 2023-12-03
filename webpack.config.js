@@ -31,4 +31,33 @@ export default {
     optimization: {
         runtimeChunk: 'single',
     },
+    module: {
+        rules: [
+            {
+                test: /\.(scss)$/,
+                use: [
+                    {
+                        loader: 'style-loader'
+                    },
+                    {
+                        loader: 'scss-loader'
+                    },
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            postcssOptions: {
+                                plugins: () => [
+                                    require('autoprefixer')
+                                ]
+                            }
+                        }
+                    },
+                    {
+                        loader: 'sass-loader'
+                    }
+                ]
+            }
+        ]
+    }
+
 };
