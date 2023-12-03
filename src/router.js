@@ -1,10 +1,17 @@
+import {setData} from "./store.js";
+
 export async function loadPage(link) {
     const router = document.querySelector('#router');
     if (link.length === 1) {
         link = '/home';
     }
+    setData({
+        route: {path: link}
+    }, {
+        reload: false
+    });
     console.log(link)
-    history.pushState({}, {}, link);
+    // history.pushState({}, {}, link);
     let page_module;
     try {
         page_module = await import(`./pages${link}.js`);

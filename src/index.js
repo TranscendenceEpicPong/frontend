@@ -7,6 +7,8 @@ import * as bootstrap from 'bootstrap'
 import NavLink from "./components/NavLink.js";
 import MainMenu from './components/MainMenu.js'
 import {loadPage} from "./router.js";
+import LoginButton from "./components/LoginButton.js";
+import {setData} from "./store.js";
 
 class NavLinkComponent extends HTMLElement {
     constructor() {
@@ -29,6 +31,34 @@ class NavLinkComponent extends HTMLElement {
     }
 }
 customElements.define('nav-link', NavLinkComponent)
+
+
+class LoginButtonComponent extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        const method = this.attributes.method.value;
+        const template = LoginButton(this.attributes.method.value, this.textContent);
+        const templateContent = template.content;
+
+        const shadowRoot = this.attachShadow({ mode: "open" });
+        const child = templateContent.cloneNode(true);
+        shadowRoot.appendChild(child);
+        shadowRoot.firstElementChild.onclick = e => {
+            console.log("button", e, method);
+            e.preventDefault();
+            if (method === 'offline')
+            {
+                setData({auth: {
+                    loggedIn: false
+                }});
+            };
+        };
+    }
+}
+customElements.define('login-button', LoginButtonComponent)
 
 customElements.define(
     'main-menu',
