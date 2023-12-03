@@ -40,7 +40,7 @@ export default {
                         loader: 'style-loader'
                     },
                     {
-                        loader: 'scss-loader'
+                        loader: 'css-loader'
                     },
                     {
                         loader: 'postcss-loader',
