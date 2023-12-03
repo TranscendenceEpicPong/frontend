@@ -1,9 +1,11 @@
-import {setData} from "./store.js";
+import {getData, setData} from "./store.js";
 
 export async function loadPage(link) {
     const router = document.querySelector('#router');
-    if (link.length === 1) {
-        link = '/home';
+    if (link === '/') {
+        const loggedIn = getData('auth.loggedIn');
+        if (typeof loggedIn !== undefined)
+            link = '/start';
     }
     setData({
         route: {path: link}
@@ -14,7 +16,7 @@ export async function loadPage(link) {
     // history.pushState({}, {}, link);
     let page_module;
     try {
-        page_module = await import(`./pages${link}.js`);
+        page_module = await import(`./pages${link === '/' ? '/home' : link}.js`);
     } catch (e)
     {
         page_module = await import(`./pages/404.js`);
