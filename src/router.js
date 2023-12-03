@@ -4,7 +4,8 @@ export async function loadPage(link) {
     const router = document.querySelector('#router');
     if (link === '/') {
         const loggedIn = getData('auth.loggedIn');
-        if (typeof loggedIn !== undefined)
+        console.log(typeof loggedIn);
+        if (loggedIn !== null)
             link = '/start';
     }
     setData({

@@ -10,6 +10,7 @@ import {loadPage} from "./router.js";
 import LoginButton from "./components/LoginButton.js";
 import {setData} from "./store.js";
 import GameModeButton from "./components/GameModeButton.js";
+import TournamentPlayerAdd from "./components/TournamentPlayerAdd.js";
 
 class NavLinkComponent extends HTMLElement {
     constructor() {
@@ -60,11 +61,45 @@ class LoginButtonComponent extends HTMLElement {
                         online: false
                     }
                 });
-            };
+            }
         };
     }
 }
 customElements.define('login-button', LoginButtonComponent)
+
+class TournamentPlayerAddComponent extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        const template = TournamentPlayerAdd();
+        const templateContent = template.content;
+
+        const shadowRoot = this.attachShadow({ mode: "open" });
+        const child = templateContent.cloneNode(true);
+        shadowRoot.appendChild(child);
+        console.log(child);
+        shadowRoot.querySelector("button").onclick = e => {
+            console.log("add", e);
+            e.preventDefault();
+            // const child = templateContent.cloneNode(true);
+            // shadowRoot.appendChild(child);
+            // console.log(child);
+            setData({
+                game: {
+                    tournament:
+                    {
+                        players: {
+                            alias: this.attributes.alias.value
+                        }
+                    }
+                }
+            })
+        };
+    }
+}
+customElements.define('tournament-player-add', TournamentPlayerAddComponent);
 
 class GameModeButtonComponent extends HTMLElement {
     constructor() {

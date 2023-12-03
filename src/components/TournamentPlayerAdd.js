@@ -1,7 +1,11 @@
 import {html} from "../html.js";
+import {getData} from "../store.js";
 
 export default (alias) => {
     return html`
-        <input type="text" value="${alias || ''}"/>
+        <div>
+            <input type="text" value="${alias || ''}"/>
+            <button>Add</button>
+        </div>
     `;
 }

@@ -13,7 +13,21 @@ export function html(strings, ...values) {
     let content = "";
     strings.forEach((s, i) => {
         content += s;
-        if (values[i]) content += sanitize_html(values[i]);
+        const element = values[i];
+        switch (typeof element) {
+            case 'string':
+                content += sanitize_html(element);
+                break;
+            case 'object':
+                if (Object.prototype.toString.call(element) === '[object HTMLTemplateElement]')
+                {
+                    console.log('HTMLTemplateElement');
+                    const childrenElements = Array.from(element.content.children);
+                    childrenElements.forEach(el => {
+                        content += el.outerHTML;
+                    });
+                }
+        }
     });
     content = content.trim();
     if (!content) return null;
