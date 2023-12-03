@@ -9,6 +9,7 @@ import MainMenu from './components/MainMenu.js'
 import {loadPage} from "./router.js";
 import LoginButton from "./components/LoginButton.js";
 import {setData} from "./store.js";
+import GameModeButton from "./components/GameModeButton.js";
 
 class NavLinkComponent extends HTMLElement {
     constructor() {
@@ -51,14 +52,43 @@ class LoginButtonComponent extends HTMLElement {
             e.preventDefault();
             if (method === 'offline')
             {
-                setData({auth: {
-                    loggedIn: false
-                }});
+                setData({
+                    auth: {
+                        loggedIn: false
+                    },
+                    mode: {
+                        online: false
+                    }
+                });
             };
         };
     }
 }
 customElements.define('login-button', LoginButtonComponent)
+
+class GameModeButtonComponent extends HTMLElement {
+    constructor() {
+        super();
+    }
+
+    connectedCallback() {
+        const mode = this.attributes.mode.value;
+        const template = GameModeButton(this.attributes.mode.value, this.textContent);
+        const templateContent = template.content;
+
+        const shadowRoot = this.attachShadow({ mode: "open" });
+        const child = templateContent.cloneNode(true);
+        shadowRoot.appendChild(child);
+        shadowRoot.firstElementChild.onclick = e => {
+            e.preventDefault();
+            setData({
+                game: { mode: mode },
+            });
+            loadPage(`/setup/${mode}`);
+        };
+    }
+}
+customElements.define('game-mode-button', GameModeButtonComponent)
 
 customElements.define(
     'main-menu',
