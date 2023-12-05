@@ -11,29 +11,9 @@ import LoginButton from "./components/LoginButton.js";
 import {setData} from "./store.js";
 import GameModeButton from "./components/GameModeButton.js";
 import TournamentPlayerAdd from "./components/TournamentPlayerAdd.js";
+import {registerComponent} from "./registerComponent.js";
 
-class NavLinkComponent extends HTMLElement {
-    constructor() {
-        super();
-    }
-
-    connectedCallback() {
-        const link = this.attributes.href.value;
-        const template = NavLink(this.attributes.href.value, this.textContent);
-        const templateContent = template.content;
-
-        const shadowRoot = this.attachShadow({ mode: "open" });
-        const child = templateContent.cloneNode(true);
-        shadowRoot.appendChild(child);
-        shadowRoot.firstElementChild.onclick = e => {
-            console.log("click")
-            e.preventDefault();
-            loadPage(link);
-        };
-    }
-}
-customElements.define('nav-link', NavLinkComponent)
-
+registerComponent('nav-link', NavLink);
 
 class LoginButtonComponent extends HTMLElement {
     constructor() {
