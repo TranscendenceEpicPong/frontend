@@ -1,4 +1,5 @@
 import {loadPage} from "./router.js";
+import {isArray, isObject} from "./utils.js";
 
 const store = {};
 
@@ -23,17 +24,13 @@ const schema = {
 
 const isValid = (prop, value, schema_prop) => {
     const value_type = typeof value;
-    // const schema_type = typeof schema_prop;
-    if (schema_prop === 'array' && Object.prototype.toString.call(value_type) === '[object Array]')
-    {
+    if (schema_prop === 'array' && isArray(value))
         return true;
-    }
-    if (schema_prop !== 'object')
-        return value_type === schema_prop;
-    if (Object.prototype.toString.call(schema_prop) === '[object Array]')
-    {
+    if (schema_prop === 'object' && isObject(value))
+        return true;
+    if (isArray(schema_prop))
         return schema_prop.includes(value);
-    }
+    return value_type === schema_prop;
 }
 
 export const setData = (update, options = {reload: true}, store_iter = store, schema_iter = schema) => {
@@ -61,8 +58,11 @@ export const setData = (update, options = {reload: true}, store_iter = store, sc
         }
         else if (isValid(prop, update[prop], schema_iter[prop]))
         {
-            store_iter[prop] = update[prop];
-            console.log(`Set ${prop} to ${update[prop]}`);
+            if (schema_iter[prop] === 'array')
+                store_iter[prop] = [...store_iter[prop] || [], update[prop]]
+            else
+                store_iter[prop] = update[prop];
+            console.log(`Set ${prop} to `, update[prop]);
         }
         else
         {
@@ -72,24 +72,35 @@ export const setData = (update, options = {reload: true}, store_iter = store, sc
 
     if (options.reload === true)
         loadPage(store.route.path);
+
+    if (!window.store)
+        window.store = {};
+    Object.assign(window.store, store);
 }
 
 export const getData = (path) => {
     const keys = path.split('.');
 
     let current = store;
-    let not_found = false;
+    let schema_iter = schema;
     keys.forEach(k => {
-        if (not_found)
-            return ;
+        console.log(k);
         if (typeof current[k] === 'undefined')
         {
-            console.error(`Didn't find ${k} in `, current);
-            not_found = true;
-            return undefined;
+            if (typeof schema_iter[k] === 'undefined')
+            {
+                console.error(`Didn't find ${k} in `, current);
+                return undefined;
+            }
+
+            if (isObject(schema_iter[k]))
+                current[k] = {};
+            else if (schema_iter[k] === 'array')
+                current[k] = [];
         }
         console.log(current);
         current = current[k];
+        schema_iter = schema_iter[k];
     });
-    return not_found ? null : current;
+    return current;
 }

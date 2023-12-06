@@ -1,3 +1,5 @@
+import {isArray} from "./utils.js";
+
 function sanitize_html(input)
 {
     input = input.replace(/&/g, '&amp;');
@@ -8,25 +10,43 @@ function sanitize_html(input)
     return input;
 }
 
+function renderTemplateElement(element)
+{
+    if (Object.prototype.toString.call(element) !== '[object HTMLTemplateElement]') {
+        console.error("Cannot render this object: ", element);
+        return "";
+    }
+    console.log('HTMLTemplateElement');
+    const childrenElements = Array.from(element.content.children);
+    let content = "";
+    childrenElements.forEach(el => {
+        content += el.outerHTML;
+    });
+    return content;
+}
+
 export function html(strings, ...values) {
     const template = document.createElement("template");
     let content = "";
     strings.forEach((s, i) => {
         content += s;
-        const element = values[i];
+        let element = values[i];
         switch (typeof element) {
+            case 'number':
+                element = `${element}`;
             case 'string':
                 content += sanitize_html(element);
                 break;
             case 'object':
-                if (Object.prototype.toString.call(element) === '[object HTMLTemplateElement]')
+                if (isArray(element))
                 {
-                    console.log('HTMLTemplateElement');
-                    const childrenElements = Array.from(element.content.children);
-                    childrenElements.forEach(el => {
-                        content += el.outerHTML;
-                    });
+                    element.forEach(el => content += renderTemplateElement(el));
+                    break;
                 }
+                renderTemplateElement(element);
+                break;
+            default:
+                console.error("Cannot interpret element ", element);
         }
     });
     content = content.trim();

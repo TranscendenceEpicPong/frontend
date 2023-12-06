@@ -62,6 +62,12 @@ class TournamentPlayerAddComponent extends HTMLElement {
         console.log(child);
         shadowRoot.querySelector("button").onclick = e => {
             console.log("add", e);
+            const alias = e.target.previousElementSibling.value;
+            if(alias === ''){
+                console.log('no input');
+            }else{
+                console.log(alias);
+            }
             e.preventDefault();
             // const child = templateContent.cloneNode(true);
             // shadowRoot.appendChild(child);
@@ -70,9 +76,9 @@ class TournamentPlayerAddComponent extends HTMLElement {
                 game: {
                     tournament:
                     {
-                        players: {
-                            alias: this.attributes.alias.value
-                        }
+                        players: [{
+                            alias: alias
+                        }]
                     }
                 }
             })

@@ -9,23 +9,19 @@ const get_player_line = (alias, index) => html`
 
 export default () => {
     const players = getData('game.tournament.players');
-    let content = "";
-    if (!players)
-    {
-        content = get_player_line('', 0);
-    }
-    else
-    {
-        players.forEach((alias, index) => {
-            content += get_player_line(alias, index);
-        })
-    }
+
+    const elements = [];
+    players.forEach((player, index) => {
+        elements.push(get_player_line(player.alias, index));
+    });
+
+    elements.push(get_player_line('', elements.length));
 
     return html`
         <h1>SETUP TOURNAMENT</h1>
         
         <form>
-            ${content}
+            ${elements}
         </form>
     `
 }
