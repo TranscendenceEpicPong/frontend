@@ -15,7 +15,7 @@ export function registerComponent(name, Component) {
         connectedCallback() {
             const attributes = {
                 ...this.getAllAttributes(),
-                textContent: this.textContent
+                textContent: this.textContent || ''
             };
             const component = Component(attributes);
             const template = component.template.content;

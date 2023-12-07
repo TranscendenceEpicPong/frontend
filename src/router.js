@@ -5,7 +5,8 @@ export async function loadPage(link) {
     if (link === '/') {
         const loggedIn = getData('auth.loggedIn');
         console.log(typeof loggedIn);
-        if (loggedIn !== null)
+        console.log(loggedIn);
+        if (loggedIn !== undefined)
             link = '/start';
     }
     setData({

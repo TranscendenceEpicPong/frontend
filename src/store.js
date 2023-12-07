@@ -59,9 +59,15 @@ export const setData = (update, options = {reload: true}, store_iter = store, sc
         else if (isValid(prop, update[prop], schema_iter[prop]))
         {
             if (schema_iter[prop] === 'array')
-                store_iter[prop] = [...store_iter[prop] || [], update[prop]]
+            {
+                if (!store_iter[prop])
+                    store_iter[prop] = []
+                store_iter[prop].push(...update[prop])
+            }
             else
+            {
                 store_iter[prop] = update[prop];
+            }
             console.log(`Set ${prop} to `, update[prop]);
         }
         else

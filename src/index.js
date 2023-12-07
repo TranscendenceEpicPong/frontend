@@ -12,8 +12,10 @@ import {setData} from "./store.js";
 import GameModeButton from "./components/GameModeButton.js";
 import TournamentPlayerAdd from "./components/TournamentPlayerAdd.js";
 import {registerComponent} from "./registerComponent.js";
+import GameWindow from "./components/GameWindow.js";
 
 registerComponent('nav-link', NavLink);
+registerComponent('game-window', GameWindow);
 
 class LoginButtonComponent extends HTMLElement {
     constructor() {
@@ -47,45 +49,7 @@ class LoginButtonComponent extends HTMLElement {
 }
 customElements.define('login-button', LoginButtonComponent)
 
-class TournamentPlayerAddComponent extends HTMLElement {
-    constructor() {
-        super();
-    }
-
-    connectedCallback() {
-        const template = TournamentPlayerAdd();
-        const templateContent = template.content;
-
-        const shadowRoot = this.attachShadow({ mode: "open" });
-        const child = templateContent.cloneNode(true);
-        shadowRoot.appendChild(child);
-        console.log(child);
-        shadowRoot.querySelector("button").onclick = e => {
-            console.log("add", e);
-            const alias = e.target.previousElementSibling.value;
-            if(alias === ''){
-                console.log('no input');
-            }else{
-                console.log(alias);
-            }
-            e.preventDefault();
-            // const child = templateContent.cloneNode(true);
-            // shadowRoot.appendChild(child);
-            // console.log(child);
-            setData({
-                game: {
-                    tournament:
-                    {
-                        players: [{
-                            alias: alias
-                        }]
-                    }
-                }
-            })
-        };
-    }
-}
-customElements.define('tournament-player-add', TournamentPlayerAddComponent);
+registerComponent('tournament-player-add', TournamentPlayerAdd);
 
 class GameModeButtonComponent extends HTMLElement {
     constructor() {

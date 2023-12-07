@@ -31,6 +31,8 @@ export function html(strings, ...values) {
     strings.forEach((s, i) => {
         content += s;
         let element = values[i];
+        if (!element)
+            return;
         switch (typeof element) {
             case 'number':
                 element = `${element}`;
