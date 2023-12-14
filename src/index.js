@@ -12,6 +12,7 @@ import GameModeButton from "./components/GameModeButton.js";
 import TournamentPlayerAdd from "./components/TournamentPlayerAdd.js";
 import {registerComponent} from "./registerComponent.js";
 import GameWindow from "./components/GameWindow.js";
+import LoginForm from "./components/LoginForm.js";
 
 registerComponent('nav-link', NavLink);
 registerComponent('game-window', GameWindow);
@@ -19,6 +20,7 @@ registerComponent('login-button', LoginButton);
 registerComponent('tournament-player-add', TournamentPlayerAdd);
 registerComponent('game-mode-button', GameModeButton);
 registerComponent('main-menu', MainMenu);
+registerComponent('login-form', LoginForm)
 
 window.addEventListener('load', () => {
     const path = window.location.pathname

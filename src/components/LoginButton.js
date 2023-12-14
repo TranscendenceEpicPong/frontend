@@ -1,5 +1,6 @@
 import {html} from "../html.js";
 import {setData} from "../store.js";
+import {loadPage} from "../router.js";
 
 export default (props) => {
     const {method, textContent} = props;
@@ -22,6 +23,10 @@ export default (props) => {
                                 online: false
                             }
                         });
+                    }
+                    else
+                    {
+                        loadPage(`auth/${method}`);
                     }
                 }
             }
