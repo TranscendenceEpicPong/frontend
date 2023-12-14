@@ -15,7 +15,7 @@ export async function loadPage(link) {
         reload: false
     });
     console.log(link)
-    // history.pushState({}, {}, link);
+    history.pushState({}, {}, link);
     let page_module;
     try {
         page_module = await import(`./pages${link === '/' ? '/home' : link}.js`);

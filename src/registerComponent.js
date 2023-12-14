@@ -24,7 +24,7 @@ export function registerComponent(name, Component) {
             const child = template.cloneNode(true);
             shadowRoot.appendChild(child);
 
-            component.handlers.forEach(handler => {
+            component.handlers?.forEach(handler => {
                 const element = shadowRoot.querySelector(handler.selector);
                 const options = Object.assign(
                     {}, // new object
